@@ -2,6 +2,13 @@ import './style.css'
 import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
 
+const infoDialog = document.querySelector("dialog");
+const infoBtn = document.getElementById("info-button");
+infoBtn.addEventListener("click", function () {
+  infoDialog.showModal();
+}
+);
+
 var southWest = L.latLng(-1.55863, 95.74416),
   northEast = L.latLng(8.733849, 124.80310),
   bounds = L.latLngBounds(southWest, northEast);
