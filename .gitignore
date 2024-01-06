@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# To generate this tailwind css file, run npx tailwindcss -i ./style.css -o ./output.css. See readme
+output.css
