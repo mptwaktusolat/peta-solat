@@ -9,12 +9,12 @@ infoBtn.addEventListener("click", function () {
 }
 );
 
-var southWest = L.latLng(-1.55863, 95.74416),
-  northEast = L.latLng(8.733849, 124.80310),
+var southWest = L.latLng(-8.39979528699539, 91.17968766368219),
+  northEast = L.latLng(15.368147664459787, 131.37879837658514),
   bounds = L.latLngBounds(southWest, northEast);
 
 var map = L.map('map');
-map.setView([3.0701342867861086, 101.62496634913956], 7);
+map.setView([3.0701342867861086, 102.62496634913956], 7);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   minZoom: 6,
@@ -64,10 +64,9 @@ function polystyle(feature) {
     case 'JHR':
       color = '#22B2DA';
       break;
-    case 'NGS':
+    case 'NSN':
       color = '#6C4AB6';
       break;
-
     default:
       break;
   }
@@ -84,8 +83,6 @@ function onFeatureClick(e) {
   console.log(e.target.feature.properties);
   document.getElementById("card-state-area").innerText = e.target.feature.properties.name + ", " + e.target.feature.properties.state;
   document.getElementById("card-zonecode").innerText = e.target.feature.properties.jakim_code;
-  // document.getElementById("latlanginfo").innerText = "";
-  console.log(e);
   document.getElementById("card-latlanginfo").innerText = `${e.latlng.lat.toFixed(2)}, ${e.latlng.lng.toFixed(2)}`;
 }
 
@@ -104,10 +101,33 @@ fetch('https://corsproxyuia.up.railway.app/https://github.com/mptwaktusolat/jaki
     }
     // Add GeoJSON layer to the map
     geoJSONLayer = L.geoJSON(features, { style: polystyle, onEachFeature: onEachFeature }).addTo(map);
+
+    // determine user location after geojson loaded, otherwise, the area and jakim in card will be empty
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
   })
   .catch(error => {
-    console.error('Error loading GeoJSON data:', error);
+    alert('Error loading GeoJSON data:', error);
   });
 
+const successCallback = (position) => {
+  const lat = position.coords.latitude;
+  const lng = position.coords.longitude;
+  map.setView([lat, lng], 9);
+  L.marker([lat, lng]).addTo(map);
 
+  // resolve the jakim zone
+  document.getElementById("card-latlanginfo").innerText = `${lat.toFixed(3)}, ${lng.toFixed(3)}`;
+  if (geoJSONLayer) {
+    geoJSONLayer.eachLayer(function (layer) {
+      if (layer.getBounds().contains([lat, lng])) {
+        console.log(layer.feature.properties);
+        document.getElementById("card-state-area").innerText = layer.feature.properties.name + ", " + layer.feature.properties.state;
+        document.getElementById("card-zonecode").innerText = layer.feature.properties.jakim_code;
+      }
+    });
+  }
+};
 
+const errorCallback = (error) => {
+  console.log(error);
+};
