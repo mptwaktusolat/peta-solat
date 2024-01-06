@@ -22,8 +22,8 @@ jobs:
 
       - name: Build
         run: |
-          npx --yes tailwindcss -i ./style.css -o ./output.css --watch
           npm ci
+          npx --yes tailwindcss -i ./style.css -o ./output.css
           npm run build
 
       - name: Deploy
