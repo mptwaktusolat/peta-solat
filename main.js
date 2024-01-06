@@ -79,11 +79,31 @@ function polystyle(feature) {
   };
 }
 
+const greenIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+let selectMarker = {};
+
 function onFeatureClick(e) {
   console.log(e.target.feature.properties);
   document.getElementById("card-state-area").innerText = e.target.feature.properties.name + ", " + e.target.feature.properties.state;
   document.getElementById("card-zonecode").innerText = e.target.feature.properties.jakim_code;
   document.getElementById("card-latlanginfo").innerText = `${e.latlng.lat.toFixed(2)}, ${e.latlng.lng.toFixed(2)}`;
+
+  if (selectMarker != undefined) {
+    map.removeLayer(selectMarker);
+  };
+
+  //Add a marker to show where you clicked.
+  selectMarker = L.marker([e.latlng.lat, e.latlng.lng], {
+    icon: greenIcon
+  }).addTo(map);
 }
 
 
