@@ -1,7 +1,3 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-
 const infoDialog = document.querySelector("dialog");
 const infoBtn = document.getElementById("info-button");
 infoBtn.addEventListener("click", function () {
