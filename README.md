@@ -8,7 +8,7 @@ Malaysia Prayer Zone Map
 
 ## Data Source
 
-Zon information are from [JAKIM](https://www.e-solat.gov.my/), then it get turned into GeoJSON: https://github.com/mptwaktusolat/jakim.geojson
+Read here https://github.com/mptwaktusolat/jakim.geojson 
 
 ## Getting Started
 
