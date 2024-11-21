@@ -23,49 +23,22 @@ map.setMaxBounds(bounds);
 
 function polystyle(feature) {
   let color = 'blue';
-  switch (feature.properties.state) {
-    case 'SGR':
-      color = 'red';
-      break;
-    case 'KDH':
-      color = 'green';
-      break;
-    case 'PLS':
-      color = 'yellow';
-      break;
-    case 'TRG':
-      color = 'purple';
-      break;
-    case 'KTN':
-      color = 'orange';
-      break;
-    case 'PHG':
-      color = 'brown';
-      break;
-    case 'PRK':
-      color = '#60E550';
-      break;
-    case 'SBH':
-      color = '#F67575';
-      break;
-    case 'SWK':
-      color = '#FFA34D';
-      break;
-    case 'MLK':
-      color = '#219C90';
-      break;
-    case 'PNG':
-      color = '#D3504A';
-      break;
-    case 'JHR':
-      color = '#22B2DA';
-      break;
-    case 'NSN':
-      color = '#6C4AB6';
-      break;
-    default:
-      break;
-  }
+  const stateColors = {
+    SGR: 'red',
+    KDH: 'green',
+    PLS: 'yellow',
+    TRG: 'purple',
+    KTN: 'orange',
+    PHG: 'brown',
+    PRK: '#60E550',
+    SBH: '#F67575',
+    SWK: '#FFA34D',
+    MLK: '#219C90',
+    PNG: '#D3504A',
+    JHR: '#22B2DA',
+    NSN: '#6C4AB6',
+  };
+  color = stateColors[feature.properties.state] || 'blue';
   return {
     fillColor: color,
     weight: 2,
@@ -105,7 +78,7 @@ function onFeatureClick(e) {
 
 let geoJSONLayer;
 // Fetch GeoJSON data
-fetch('https://corsproxyuia.up.railway.app/https://github.com/mptwaktusolat/jakim.geojson/raw/master/malaysia.district-jakim.geojson')
+fetch('https://raw.githubusercontent.com/mptwaktusolat/jakim.geojson/master/malaysia.district-jakim.geojson')
   .then(response => response.json())
   .then(data => {
     const features = data.features;
