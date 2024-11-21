@@ -109,7 +109,6 @@ const successCallback = (position) => {
   if (geoJSONLayer) {
     geoJSONLayer.eachLayer(function (layer) {
       if (layer.getBounds().contains([lat, lng])) {
-        console.log(layer.feature.properties);
         document.getElementById("card-state-area").innerText = layer.feature.properties.name + ", " + layer.feature.properties.state;
         document.getElementById("card-zonecode").innerText = layer.feature.properties.jakim_code;
       }
