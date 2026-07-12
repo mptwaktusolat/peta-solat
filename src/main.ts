@@ -18,21 +18,12 @@ type JakimProperties = {
   jakim_code?: string;
 };
 
-type Position = [number, number];
-type Ring = Position[];
-type JakimGeometry =
-  | { type: "Polygon"; coordinates: Ring[] }
-  | { type: "MultiPolygon"; coordinates: Ring[][] };
 type JakimFeature = {
   type: "Feature";
   properties: JakimProperties;
-  geometry: JakimGeometry;
-};
-type JakimFeatureCollection = {
-  type: "FeatureCollection";
-  features: JakimFeature[];
 };
 
+// assign each state with own color
 const fillColorExpression: ExpressionSpecification = [
   "match",
   ["get", "state"],
@@ -97,9 +88,9 @@ const map = new maplibregl.Map({
   maxBounds: malaysiaBounds,
 });
 
-let geoJson: JakimFeatureCollection | undefined;
 let selectedMarker: maplibregl.Marker | undefined;
 
+// Show the selected zone and coordinates on the card.
 function setCard(
   feature: JakimFeature,
   lat: number,
@@ -119,6 +110,7 @@ function setCard(
   }
 }
 
+// Move the selection marker to the chosen location.
 function setSelectedMarker(lngLat: LngLatLike) {
   selectedMarker?.remove();
   selectedMarker = new maplibregl.Marker({ color: "#22c55e" })
@@ -126,47 +118,14 @@ function setSelectedMarker(lngLat: LngLatLike) {
     .addTo(map);
 }
 
-function pointInRing(point: Position, ring: Ring) {
-  const [x, y] = point;
-  let inside = false;
-
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    const intersects =
-      yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
-
-    if (intersects) {
-      inside = !inside;
-    }
-  }
-
-  return inside;
-}
-
-function pointInPolygon(point: Position, rings: Ring[]) {
-  return (
-    pointInRing(point, rings[0]) &&
-    !rings.slice(1).some((ring) => pointInRing(point, ring))
-  );
-}
-
-function featureContains(feature: JakimFeature, point: Position) {
-  if (feature.geometry.type === "Polygon") {
-    return pointInPolygon(point, feature.geometry.coordinates);
-  }
-
-  return feature.geometry.coordinates.some((polygon) =>
-    pointInPolygon(point, polygon),
-  );
-}
-
+// Find the prayer zone rendered at these coordinates.
 function findFeatureAt(lng: number, lat: number) {
-  return geoJson?.features.find((feature) =>
-    featureContains(feature, [lng, lat]),
-  );
+  return map.queryRenderedFeatures(map.project([lng, lat]), {
+    layers: ["jakim-fill"],
+  })[0] as JakimFeature | undefined;
 }
 
+// Show the zone selected on the map.
 function onMapClick(event: MapLayerMouseEvent) {
   const feature = event.features?.[0] as JakimFeature | undefined;
   if (!feature) {
@@ -177,23 +136,26 @@ function onMapClick(event: MapLayerMouseEvent) {
   setSelectedMarker(event.lngLat);
 }
 
+// Find and show the user's current location and prayer zone.
 function locateUser() {
   navigator.geolocation.getCurrentPosition(
     (position) => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
-      map.flyTo({ center: [lng, lat], zoom: 9 });
       new maplibregl.Marker().setLngLat([lng, lat]).addTo(map);
 
       if (latLngInfo) {
         latLngInfo.innerText = `${lat.toFixed(3)}, ${lng.toFixed(3)}`;
       }
 
-      const feature = findFeatureAt(lng, lat);
-      if (feature) {
-        setCard(feature, lat, lng, 3);
-      }
+      map.once("moveend", () => {
+        const feature = findFeatureAt(lng, lat);
+        if (feature) {
+          setCard(feature, lat, lng, 3);
+        }
+      });
+      map.flyTo({ center: [lng, lat], zoom: 9 });
     },
     (error) => {
       alert(error.message);
@@ -208,7 +170,7 @@ map.on("load", async () => {
       throw new Error(`GeoJSON request failed: ${response.status}`);
     }
 
-    geoJson = (await response.json()) as JakimFeatureCollection;
+    const geoJson = await response.json();
 
     map.addSource("jakim", {
       type: "geojson",
