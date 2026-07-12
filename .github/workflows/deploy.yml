@@ -40,7 +40,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build with Astro
+      - name: Build app
         run: |
           pnpm run build --base "${{ steps.pages.outputs.base_path }}"
 
