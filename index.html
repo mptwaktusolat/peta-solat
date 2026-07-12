@@ -40,28 +40,32 @@
 <body>
   <div class="relative">
     <!-- Dialog info -->
-    <dialog class="rounded-md transition-all">
+    <dialog class="m-auto rounded-md transition-all">
       <div class="m-4 p-4">
         <h1 class="text-2xl font-bold">Peta Zon Waktu Solat</h1>
         <p class="text-slate-600 dark:text-slate-400">Aplikasi ini supaya dapat menggambarkan zon waktu solat di
           Malaysia</p>
         <br />
         <p>Untuk mengetahui lebih lanjut tentang bagaimana data ini dikumpulkan, sila pergi ke Github Repository <a
+            class="text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
             href="https://github.com/mptwaktusolat/jakim.geojson?tab=readme-ov-file#methodology">jakim.geojson</a>
         </p>
         <br />
-        Dapatkan aplikasi waktu solat di <a href="https://waktusolat.app">sini</a>
+        Dapatkan aplikasi waktu solat di <a
+          class="text-blue-600 underline hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+          href="https://waktusolat.app">sini</a>
         <br />
         <br />
         <form method="dialog">
-          <button>OK</button>
+          <button
+            class="rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 active:bg-blue-800">OK</button>
         </form>
       </div>
     </dialog>
     <div class="h-dvh w-screen" id="map"></div>
     <!-- Card detail -->
     <div
-      class="absolute sm:top-0 sm:right-0 max-sm:bottom-0 min-w-full sm:min-w-0 transition block sm:mx-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 z-[500]">
+      class="absolute sm:top-4 sm:right-0 max-sm:bottom-0 min-w-full sm:min-w-0 transition block sm:mx-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 z-500">
       <div class="md:flex">
         <div class="p-6">
           <div class="uppercase tracking-wide text-sm text-indigo-500 dark:text-indigo-200 font-semibold">District/Area
@@ -84,8 +88,8 @@
     </div>
     <!-- Info -->
     <button id="info-button"
-      class="absolute sm:left-0 sm:bottom-0 max-sm:top-0 max-sm:right-0 transition block m-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 z-[500]">
-      <div class="p-1">
+      class="absolute sm:left-0 sm:bottom-0 max-sm:top-0 max-sm:right-0 transition block m-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 z-500">
+      <div class="p-1 sm:p-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-info-square-rounded-filled"
           width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
           stroke-linecap="round" stroke-linejoin="round">
